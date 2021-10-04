@@ -14,11 +14,11 @@ function virtualenv_info(){
 # disable the default virtualenv prompt change
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-VENV="\$(virtualenv_info)"
+VENV="$(virtualenv_info)"
 
 # Custom Prompt with dir, venv, and git info
 # https://bashrcgenerator.com/
-PS1='\[\033]0;\w\007\]\n\[\033[38;5;76m\][\!] [\D{%m/%d} \A]\[\033[0;32m\] [\u@\h] ${VENV} \[\033[38;5;39m\][\w\]]\033[0;36m\]`__git_ps1`\[\033[0m\]\n\[\033[1;30m\]$ \[\033[0m\]'
+PS1='\[\033]0;\w\007\]\n\[\033[38;5;76m\][\!] [\D{%m/%d} \A]\[\033[0;32m\] [\u@\h]${VENV}\[\033[38;5;39m\][\w\]]\033[0;36m\]`__git_ps1`\[\033[0m\]\n\[\033[1;30m\]$ \[\033[0m\]'
 unset color_prompt force_color_prompt
 
 # Git aliases and funcs

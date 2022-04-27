@@ -122,3 +122,36 @@ function gpsu () {
     echo $cmd
     eval $cmd
 }
+alias wol1="wakeonlan 1c:1b:0d:66:01:96" # Old PC
+alias wol2="wakeonlan 84:a9:3e:63:bd:65" # Work Desktop
+alias wol="wol1 && wol2"
+
+#Docker things
+#Get ID, Name, IP, Ports
+function dip() {
+        _print_container_info() {
+            local container_id
+            local container_ports
+            local container_ip
+            local container_name
+            container_id="${1}"
+
+            container_ports=( $(docker port "$container_id" | grep -o "0.0.0.0:.*" | cut -f2 -d:) )
+            container_name="$(docker inspect --format "{{ .Name }}" "$container_id" | sed 's/\///')"
+            container_ip="$(docker inspect --format "{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}" "$container_id")"
+	    container_status=$(docker inspect --format "{{.State.Status}}" "$container_id")
+	    printf "%-13s %-27s %-30s %-26s %-80s\n" "$container_id" "$container_name" "$container_status" "$container_ip" "${container_ports[*]}"
+        }
+
+        local container_id
+        container_id="$1"
+        printf "%-13s %-27s %-30s %-26s %-80s\n" 'Container Id' 'Container Name' 'Container Status' 'Container IP' 'Container Ports'
+        if [ -z "$container_id" ]; then
+            local container_id
+            docker ps -a --format "{{.ID}}" | while read -r container_id ; do
+                _print_container_info  "$container_id"
+            done
+        else
+            _print_container_info  "$container_id"
+        fi
+}

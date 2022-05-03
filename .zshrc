@@ -122,6 +122,7 @@ function gpsu () {
     echo $cmd
     eval $cmd
 }
+
 alias wol1="wakeonlan 1c:1b:0d:66:01:96" # Old PC
 alias wol2="wakeonlan 84:a9:3e:63:bd:65" # Work Desktop
 alias wol="wol1 && wol2"

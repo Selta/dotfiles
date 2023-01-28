@@ -1,9 +1,6 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# Brew from OG .zshrc
-export PATH=/opt/homebrew/bin:$PATH
-
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -11,11 +8,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-
-#Selta - choices
-# ZSH_THEME="candy"
-ZSH_THEME="jonathan"
-
+ZSH_THEME="dieter"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -33,7 +26,7 @@ ZSH_THEME="jonathan"
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
 # zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
 # zstyle ':omz:update' frequency 13
@@ -79,14 +72,11 @@ ZSH_THEME="jonathan"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
-  macos
   alias-finder
   aliases
   gh
   github
-  lpass
 )
-
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -121,38 +111,4 @@ function gpsu () {
     cmd="git push -u origin $branch:users/selta/$branch"
     echo $cmd
     eval $cmd
-}
-
-alias wol1="wakeonlan 1c:1b:0d:66:01:96" # Old PC
-alias wol2="wakeonlan 84:a9:3e:63:bd:65" # Work Desktop
-alias wol="wol1 && wol2"
-
-#Docker things
-#Get ID, Name, IP, Ports
-function dip() {
-        _print_container_info() {
-            local container_id
-            local container_ports
-            local container_ip
-            local container_name
-            container_id="${1}"
-
-            container_ports=( $(docker port "$container_id" | grep -o "0.0.0.0:.*" | cut -f2 -d:) )
-            container_name="$(docker inspect --format "{{ .Name }}" "$container_id" | sed 's/\///')"
-            container_ip="$(docker inspect --format "{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}" "$container_id")"
-	    container_status=$(docker inspect --format "{{.State.Status}}" "$container_id")
-	    printf "%-13s %-27s %-30s %-26s %-80s\n" "$container_id" "$container_name" "$container_status" "$container_ip" "${container_ports[*]}"
-        }
-
-        local container_id
-        container_id="$1"
-        printf "%-13s %-27s %-30s %-26s %-80s\n" 'Container Id' 'Container Name' 'Container Status' 'Container IP' 'Container Ports'
-        if [ -z "$container_id" ]; then
-            local container_id
-            docker ps -a --format "{{.ID}}" | while read -r container_id ; do
-                _print_container_info  "$container_id"
-            done
-        else
-            _print_container_info  "$container_id"
-        fi
 }
